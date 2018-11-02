@@ -1,20 +1,23 @@
-// const suffixWithUnit = function(number) {
-//   if (typeof number !== "number") return "Must be a number";
+// Suffix With Unit
+const suffixWithUnit = function(number) {
+  if (typeof number !== "number") return "Must be a number";
+  if (number < 0) return "Must be a positive number";
 
-//   if (String(number).length < 4) console.log(number);
-//   if (String(number).length > 3 && String(number).length < 7)
-//     console.log(`${number / 1000} Kilo`);
-//   if (String(number).length > 6 && String(number).length < 10)
-//     console.log(`${number / 1000000} Mega`);
-// };
+  if (String(number).length < 4) return String(number);
+  if (String(number).length > 3 && String(number).length < 7)
+    return `${number / 1000} Kilo`;
+  if (String(number).length > 6) return `${number / 1000000} Mega`;
+};
 
-// suffixWithUnit("123"); //must be a number
-// suffixWithUnit(123); //123
-// suffixWithUnit(1234); //1.234 kilo
-// suffixWithUnit(12345); //12.345 kilo
-// suffixWithUnit(1234567); //1.234567 Mega
-// suffixWithUnit(12345678); //12.345678 Mega
+console.log(suffixWithUnit("123")); //must be a number
+console.log(suffixWithUnit(-5)); //Must be a positive number
+console.log(suffixWithUnit(123)); //123
+console.log(suffixWithUnit(1234)); //1.234 kilo
+console.log(suffixWithUnit(12345)); //12.345 kilo
+console.log(suffixWithUnit(1234567)); //1.234567 Mega
+console.log(suffixWithUnit(12345678)); //12.345678 Mega
 
+//JSON manipulation
 const JSON_A = {
   locker_5_light: 1,
   locker_5_unlock: 2,
@@ -53,6 +56,7 @@ const convertToJSON_B = function(jsonA) {
     }
     result[newKey][newNestedKey] = jsonA[key];
   }
+  console.log(result);
   return result;
 };
 
@@ -61,10 +65,9 @@ const convertToJSON_C = function(jsonB) {
   const objInArray = Object.entries(jsonB);
 
   for (let i = 0; i < objInArray.length; i += 2) {
-    console.log(objInArray);
     const key = objInArray[i][0];
-    const key2 = objInArray[i + 1][0];
     const objs = objInArray[i][1];
+    const key2 = objInArray[i + 1][0];
     const objs2 = objInArray[i + 1][1];
 
     const message = `rx_locker_${key}${key2}`;
@@ -73,19 +76,20 @@ const convertToJSON_C = function(jsonB) {
     const keyForDoor2 = `locker_${key2}_door`;
     const keyForItem2 = `locker_${key2}_item`;
 
-    const signal = {};
-    signal[keyForDoor] = objs.door;
-    signal[keyForItem] = objs.item;
-    signal[keyForDoor2] = objs2.door;
-    signal[keyForItem2] = objs2.item;
+    const signals = {};
+    signals[keyForDoor] = objs.door;
+    signals[keyForItem] = objs.item;
+    signals[keyForDoor2] = objs2.door;
+    signals[keyForItem2] = objs2.item;
 
     result.push({
       message: message,
-      signal: signal
+      signals: signals
     });
   }
+  console.log(result);
   return result;
 };
 
-const jsonB = convertToJSON_B(JSON_A);
-const jsonC = convertToJSON_C(jsonB);
+const JSON_B = convertToJSON_B(JSON_A);
+const JSON_C = convertToJSON_C(JSON_B);
