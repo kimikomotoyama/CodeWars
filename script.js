@@ -62,30 +62,26 @@ const convertToJSON_B = function(jsonA) {
 
 const convertToJSON_C = function(jsonB) {
   const result = [];
+  let message = "";
+  let signals = {};
   const objInArray = Object.entries(jsonB);
 
-  for (let i = 0; i < objInArray.length; i += 2) {
+  for (let i = 0; i < objInArray.length; i++) {
     const key = objInArray[i][0];
     const objs = objInArray[i][1];
-    const key2 = objInArray[i + 1][0];
-    const objs2 = objInArray[i + 1][1];
 
-    const message = `rx_locker_${key}${key2}`;
-    const keyForDoor = `locker_${key}_door`;
-    const keyForItem = `locker_${key}_item`;
-    const keyForDoor2 = `locker_${key2}_door`;
-    const keyForItem2 = `locker_${key2}_item`;
+    signals[`locker_${key}_door`] = objs.door;
+    signals[`locker_${key}_item`] = objs.item;
 
-    const signals = {};
-    signals[keyForDoor] = objs.door;
-    signals[keyForItem] = objs.item;
-    signals[keyForDoor2] = objs2.door;
-    signals[keyForItem2] = objs2.item;
-
-    result.push({
-      message: message,
-      signals: signals
-    });
+    if (i % 2 !== 1) {
+      message = `rx_locker_${key}`;
+    } else {
+      result.push({
+        message: `${message}${key}`,
+        signals: signals
+      });
+      signals = {};
+    }
   }
   console.log(result);
   return result;
