@@ -1,16 +1,15 @@
 // Suffix With Unit
 const suffixWithUnit = function(number) {
-  if (typeof number !== "number") return "Must be a number";
-  if (number < 0) return "Must be a positive number";
+  if (typeof number !== "number" || number < 0) return "Must be a valid number";
+  const numLen = String(number).length;
 
-  if (String(number).length < 4) return String(number);
-  if (String(number).length > 3 && String(number).length < 7)
-    return `${number / 1000} Kilo`;
-  if (String(number).length > 6) return `${number / 1000000} Mega`;
+  if (numLen < 4) return String(number);
+  if (numLen > 3 && numLen < 7) return `${number / 1000} Kilo`;
+  if (numLen > 6) return `${number / 1000000} Mega`;
 };
 
-console.log(suffixWithUnit("123")); //must be a number
-console.log(suffixWithUnit(-5)); //Must be a positive number
+console.log(suffixWithUnit("123")); //Must be a valid number
+console.log(suffixWithUnit(-5)); //Must be a valid number
 console.log(suffixWithUnit(123)); //123
 console.log(suffixWithUnit(1234)); //1.234 kilo
 console.log(suffixWithUnit(12345)); //12.345 kilo
@@ -56,7 +55,6 @@ const convertToJSON_B = function(jsonA) {
     }
     result[newKey][newNestedKey] = jsonA[key];
   }
-  console.log(result);
   return result;
 };
 
@@ -66,14 +64,14 @@ const convertToJSON_C = function(jsonB) {
   let signals = {};
   const objInArray = Object.entries(jsonB);
 
-  for (let i = 0; i < objInArray.length; i++) {
-    const key = objInArray[i][0];
-    const objs = objInArray[i][1];
+  objInArray.forEach((element, index) => {
+    const key = element[0];
+    const objs = element[1];
 
     signals[`locker_${key}_door`] = objs.door;
     signals[`locker_${key}_item`] = objs.item;
 
-    if (i % 2 !== 1) {
+    if (index % 2 !== 1) {
       message = `rx_locker_${key}`;
     } else {
       result.push({
@@ -82,10 +80,11 @@ const convertToJSON_C = function(jsonB) {
       });
       signals = {};
     }
-  }
-  console.log(result);
+  });
   return result;
 };
 
 const JSON_B = convertToJSON_B(JSON_A);
+console.log(JSON_B);
 const JSON_C = convertToJSON_C(JSON_B);
+console.log(JSON_C);
